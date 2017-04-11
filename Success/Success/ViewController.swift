@@ -10,15 +10,20 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    struct defaultsKeys {
+        static let keyOne = "firstStringKey"
+        static let keyTwo = "secondStringKey"
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
         self.navigationController?.navigationBarHidden = true
         
-        let user : UserData = UserData()
-        user.goal = "My Goal is to be Happy & Successfull"
-        
-        print(user.goal)
+        let goalBanner = BannerView(frame: CGRect(x: 0, y: 0, width: 200, height: 50))
+        self.view.addSubview(goalBanner)
+        goalBanner.hidden = true
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,10 +41,18 @@ class ViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        let defaults = NSUserDefaults.standardUserDefaults()
+        if let stringOne = defaults.stringForKey(defaultsKeys.keyOne) {
+            //            print(stringOne) // Some String Value
+            let user : UserData = UserData()
+            user.goal = stringOne
+            
+            print(user.goal)
+        }
+        
         self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
-
 
 }
 
