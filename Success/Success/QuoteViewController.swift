@@ -30,14 +30,34 @@ class QuoteViewController: UIViewController {
             //print(stringOne)
         }
         
-        let url : String = "http://apimk.com/motivationalquotes?get_quote=yes" //"http://www.fantasyfootballnerd.com/service/nfl-teams/json/test/"
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            
+            // Make async API call to fetch quote & image
+            self.getQuote("http://apimk.com/motivationalquotes?get_quote=yes")
+
+            dispatch_async(dispatch_get_main_queue()) {
+                //loading sign
+                self.textView.text = "Loading..."
+            }
+        }
+        
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func getQuote(reuqestUrl: String){
+        let url : String = reuqestUrl
         let request : NSMutableURLRequest = NSMutableURLRequest()
         request.URL = NSURL(string: url)
         request.HTTPMethod = "GET"
         print("Start")
+        
         let session = NSURLSession.sharedSession()
+        var firstQuote = [String: AnyObject]()
         session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-            
             do {
                 let jsonResult: NSArray! = try NSJSONSerialization.JSONObjectWithData(data!, options:NSJSONReadingOptions.MutableContainers) as? NSArray
                 print("In method")
@@ -46,20 +66,22 @@ class QuoteViewController: UIViewController {
                     print("Data added")
                     print(jsonResult)
                     
-                    let firstQuote = jsonResult![0] as? NSDictionary
-                    print(firstQuote)
-                    let quote = firstQuote!["quote"] as? String
-                    let author = firstQuote!["author_name"] as? String
+                    firstQuote = (jsonResult![0] as? [String: AnyObject])!
+//                    print(firstQuote)
+                    let quote = firstQuote["quote"] as? String
+                    let author = firstQuote["author_name"] as? String
                     
-                    //self.textView.text = quote! + " - " + author!
-                    print(quote! + " - " + author!)
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.textView.text = quote! + " - " + author!
+                    }
+                    
                     // Teams Ex.
-//                    let teams = jsonResult["NFLTeams"] as? NSArray
-//                    print(teams)
-//                    let team = teams![0] as? NSDictionary
-//                    print(team)
-//                    let shortN = team!["shortName"] as? String
-//                    print(shortN)
+                    //                    let teams = jsonResult["NFLTeams"] as? NSArray
+                    //                    print(teams)
+                    //                    let team = teams![0] as? NSDictionary
+                    //                    print(team)
+                    //                    let shortN = team!["shortName"] as? String
+                    //                    print(shortN)
                     
                 } else {
                     print("No Data")
@@ -70,32 +92,6 @@ class QuoteViewController: UIViewController {
                 print("Error Occured")
             }
         }.resume()
-        
-        
-//        var url : String = "https://apimk.com/motivationalquotes?get_quote=yes"
-//        var request : NSMutableURLRequest = NSMutableURLRequest()
-//        request.URL = NSURL(string: url)
-//        request.HTTPMethod = "GET"
-        
-//        
-//        NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue(), completionHandler:{ (response:NSURLResponse!, data: NSData!, error: NSError!) -> Void in
-//            var error: AutoreleasingUnsafeMutablePointer<NSError?> = nil
-//            let jsonResult: NSDictionary! = NSJSONSerialization.JSONObjectWithData(data, options:NSJSONReadingOptions.MutableContainers, error: error) as? NSDictionary
-//            
-//            if (jsonResult != nil) {
-//                // process jsonResult
-//            } else {
-//                // couldn't load JSON, look at error
-//            }
-//            
-//            
-//        })
-        
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     @IBAction func textFieldChanged(sender: UITextField) {
@@ -150,5 +146,25 @@ class QuoteViewController: UIViewController {
 //        
 //        //try self.Context!.save()
 //    }
+    
+    // REST API Request
+    //        var url : String = "https://apimk.com/motivationalquotes?get_quote=yes"
+    //        var request : NSMutableURLRequest = NSMutableURLRequest()
+    //        request.URL = NSURL(string: url)
+    //        request.HTTPMethod = "GET"
+    
+    //
+    //        NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue(), completionHandler:{ (response:NSURLResponse!, data: NSData!, error: NSError!) -> Void in
+    //            var error: AutoreleasingUnsafeMutablePointer<NSError?> = nil
+    //            let jsonResult: NSDictionary! = NSJSONSerialization.JSONObjectWithData(data, options:NSJSONReadingOptions.MutableContainers, error: error) as? NSDictionary
+    //
+    //            if (jsonResult != nil) {
+    //                // process jsonResult
+    //            } else {
+    //                // couldn't load JSON, look at error
+    //            }
+    //            
+    //            
+    //        })
 
 }
