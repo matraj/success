@@ -10,10 +10,11 @@ import UIKit
 
 class QuoteViewController: UIViewController {
 
-    @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var userGoal_Lbl: UILabel!
     
     struct defaultsKeys {
+        static let key_userGoal = "userGoal"
         static let keyOne = "firstStringKey"
         static let keyTwo = "secondStringKey"
     }
@@ -25,8 +26,8 @@ class QuoteViewController: UIViewController {
         print("Quote");
         
         let defaults = NSUserDefaults.standardUserDefaults()
-        if let stringOne = defaults.stringForKey(defaultsKeys.keyOne) {
-            textField.text = stringOne
+        if let stringOne = defaults.stringForKey(defaultsKeys.key_userGoal) {
+            userGoal_Lbl.text = stringOne
             //print(stringOne)
         }
         
@@ -46,6 +47,30 @@ class QuoteViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.tabBarController?.navigationItem.title = "Daily Quote"
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        if let stringOne = defaults.stringForKey(defaultsKeys.key_userGoal) {
+            userGoal_Lbl.text = stringOne
+        }
+        
+        let settingButton = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        settingButton.setBackgroundImage(UIImage(named: "setting_icon"), forState: UIControlState.Normal)
+        settingButton.addTarget(self, action: #selector(QuoteViewController.segueToSetting), forControlEvents: .TouchUpInside)
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: settingButton)
+    }
+    
+    func segueToSetting() {
+//        performSegueWithIdentifier("toSettings", sender: nil)
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        let nextViewController = storyBoard.instantiateViewControllerWithIdentifier("settingVC") as! SettingsViewController
+        
+        self.tabBarController?.navigationController?.pushViewController(nextViewController, animated: true)
     }
     
     func getQuote(reuqestUrl: String){
@@ -77,9 +102,7 @@ class QuoteViewController: UIViewController {
                     
                     // Teams Ex.
                     //                    let teams = jsonResult["NFLTeams"] as? NSArray
-                    //                    print(teams)
                     //                    let team = teams![0] as? NSDictionary
-                    //                    print(team)
                     //                    let shortN = team!["shortName"] as? String
                     //                    print(shortN)
                     
@@ -94,16 +117,6 @@ class QuoteViewController: UIViewController {
         }.resume()
     }
     
-    @IBAction func textFieldChanged(sender: UITextField) {
-        print(textField.text)
-        
-        saveGoal(textField.text!)
-    }
-
-    func saveGoal(goal: String) {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setObject(goal, forKey: defaultsKeys.keyOne)
-    }
     
 //    func getJsonData() throws {
 //        let urlPath = "http://myserver/myaudits"

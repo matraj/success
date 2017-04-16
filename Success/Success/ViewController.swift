@@ -10,10 +10,10 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    struct defaultsKeys {
-        static let keyOne = "firstStringKey"
-        static let keyTwo = "secondStringKey"
-    }
+//    struct defaultsKeys {
+//        static let keyOne = "firstStringKey"
+//        static let keyTwo = "secondStringKey"
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,14 +41,14 @@ class ViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if let stringOne = defaults.stringForKey(defaultsKeys.keyOne) {
-            //            print(stringOne) // Some String Value
-            let user : UserData = UserData()
-            user.goal = stringOne
-            
-            print(user.goal)
-        }
+//        let defaults = NSUserDefaults.standardUserDefaults()
+//        if let stringOne = defaults.stringForKey(defaultsKeys.keyOne) {
+//            //            print(stringOne) // Some String Value
+//            let user : UserData = UserData()
+//            user.goal = stringOne
+//            
+//            print(user.goal)
+//        }
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
