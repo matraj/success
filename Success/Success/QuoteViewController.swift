@@ -15,8 +15,8 @@ class QuoteViewController: UIViewController {
     
     struct defaultsKeys {
         static let key_userGoal = "userGoal"
-        static let keyOne = "firstStringKey"
-        static let keyTwo = "secondStringKey"
+        static let key_dailyQuote = "dailyQuote"
+        static let key_quoteCounter = "quoteCounter"
     }
     
     override func viewDidLoad() {
@@ -31,16 +31,7 @@ class QuoteViewController: UIViewController {
             //print(stringOne)
         }
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            
-            // Make async API call to fetch quote & image
-            self.getQuote("http://apimk.com/motivationalquotes?get_quote=yes")
-
-            dispatch_async(dispatch_get_main_queue()) {
-                //loading sign
-                self.textView.text = "Loading..."
-            }
-        }
+        self.fetchQuote()
         
     }
 
@@ -73,6 +64,50 @@ class QuoteViewController: UIViewController {
         self.tabBarController?.navigationController?.pushViewController(nextViewController, animated: true)
     }
     
+    func fetchQuote() {
+        
+        // Gets int for today (integer will cycle every 365 days)
+//        let daysSince1970 = NSDate().timeIntervalSince1970 / 60 / 60 / 24
+//        let index = Int(daysSince1970) % 365
+        let date = NSDate()
+        let calendar = NSCalendar.currentCalendar()
+        let components = calendar.components([.Day , .Month , .Year], fromDate: date)
+        let index = components.day
+        
+        var todayInt = 0
+        
+        // Gets int of the day previously saved
+        let defaults = NSUserDefaults.standardUserDefaults()
+        if defaults.stringForKey(defaultsKeys.key_quoteCounter) != nil {
+            todayInt = Int(defaults.stringForKey(defaultsKeys.key_quoteCounter)!)!
+        }
+        
+        print("Todays Int: \(todayInt) vs. Previously saved: \(index)")
+        
+        if index != todayInt {
+            
+            // Save todays int as the most recent & fetch new quote
+            defaults.setObject(index, forKey: defaultsKeys.key_quoteCounter)
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+                
+                // Make async API call to fetch quote & image
+                self.getQuote("http://apimk.com/motivationalquotes?get_quote=yes")
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    //loading sign
+                    self.textView.text = "Loading..."
+                }
+            }
+        } else {
+            
+            // Show same quote as it is not a new day
+            let dailyQuote = defaults.stringForKey(defaultsKeys.key_dailyQuote)
+            self.textView.text = dailyQuote
+        }
+
+    }
+    
     func getQuote(reuqestUrl: String){
         let url : String = reuqestUrl
         let request : NSMutableURLRequest = NSMutableURLRequest()
@@ -97,7 +132,13 @@ class QuoteViewController: UIViewController {
                     let author = firstQuote["author_name"] as? String
                     
                     dispatch_async(dispatch_get_main_queue()) {
-                        self.textView.text = quote! + " - " + author!
+                        
+                        let dailyQuote = quote! + " - " + author!
+                        
+                        let defaults = NSUserDefaults.standardUserDefaults()
+                        defaults.setObject(dailyQuote, forKey: defaultsKeys.key_dailyQuote)
+                        
+                        self.textView.text = dailyQuote
                     }
                     
                     // Teams Ex.
