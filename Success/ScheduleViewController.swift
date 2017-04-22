@@ -24,13 +24,13 @@ class ScheduleViewController: UIViewController {
         self.title = "My Schedule"
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.tabBarController?.navigationItem.title = "My Schedule"
         
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if let stringOne = defaults.stringForKey(defaultsKeys.key_userGoal) {
+        let defaults = UserDefaults.standard
+        if let stringOne = defaults.string(forKey: defaultsKeys.key_userGoal) {
             userGoal_Lbl.text = stringOne
         }
     }

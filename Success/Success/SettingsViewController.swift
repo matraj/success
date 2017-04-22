@@ -20,9 +20,11 @@ class SettingsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.hideKeyboardWhenTappedAround()
 
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if let stringOne = defaults.stringForKey(defaultsKeys.key_userGoal) {
+        let defaults = UserDefaults.standard
+        if let stringOne = defaults.string(forKey: defaultsKeys.key_userGoal) {
             goalTextField.text = stringOne
             //print(stringOne)
         }
@@ -34,14 +36,14 @@ class SettingsViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func editingEnded(sender: AnyObject) {
-        print(goalTextField.text)
+    @IBAction func editingEnded(_ sender: AnyObject) {
+        //print(goalTextField.text!)
         saveGoal(goalTextField.text!)
     }
 
-    func saveGoal(goal: String) {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setObject(goal, forKey: defaultsKeys.key_userGoal)
+    func saveGoal(_ goal: String) {
+        let defaults = UserDefaults.standard
+        defaults.set(goal, forKey: defaultsKeys.key_userGoal)
     }
     
     /*

@@ -26,9 +26,9 @@ class BannerView: UIView {
     }
     
     func addCustomView() {
-        label.frame = CGRectMake(50, 10, 200, 100)
-        label.backgroundColor=UIColor.lightGrayColor()
-        label.textAlignment = NSTextAlignment.Center
+        label.frame = CGRect(x: 50, y: 10, width: 200, height: 100)
+        label.backgroundColor=UIColor.lightGray
+        label.textAlignment = NSTextAlignment.center
         label.text = "test label"
         self.addSubview(label)
         

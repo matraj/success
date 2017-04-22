@@ -25,8 +25,8 @@ class QuoteViewController: UIViewController {
         // Do any additional setup after loading the view.
         print("Quote");
         
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if let stringOne = defaults.stringForKey(defaultsKeys.key_userGoal) {
+        let defaults = UserDefaults.standard
+        if let stringOne = defaults.string(forKey: defaultsKeys.key_userGoal) {
             userGoal_Lbl.text = stringOne
             //print(stringOne)
         }
@@ -40,26 +40,26 @@ class QuoteViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.tabBarController?.navigationItem.title = "Daily Quote"
         
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if let stringOne = defaults.stringForKey(defaultsKeys.key_userGoal) {
+        let defaults = UserDefaults.standard
+        if let stringOne = defaults.string(forKey: defaultsKeys.key_userGoal) {
             userGoal_Lbl.text = stringOne
         }
         
         let settingButton = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
-        settingButton.setBackgroundImage(UIImage(named: "setting_icon"), forState: UIControlState.Normal)
-        settingButton.addTarget(self, action: #selector(QuoteViewController.segueToSetting), forControlEvents: .TouchUpInside)
+        settingButton.setBackgroundImage(UIImage(named: "setting_icon"), for: UIControlState())
+        settingButton.addTarget(self, action: #selector(QuoteViewController.segueToSetting), for: .touchUpInside)
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: settingButton)
     }
     
     func segueToSetting() {
 //        performSegueWithIdentifier("toSettings", sender: nil)
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let nextViewController = storyBoard.instantiateViewControllerWithIdentifier("settingVC") as! SettingsViewController
+        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "settingVC") as! SettingsViewController
         
         self.tabBarController?.navigationController?.pushViewController(nextViewController, animated: true)
     }
@@ -69,32 +69,32 @@ class QuoteViewController: UIViewController {
         // Gets int for today (integer will cycle every 365 days)
 //        let daysSince1970 = NSDate().timeIntervalSince1970 / 60 / 60 / 24
 //        let index = Int(daysSince1970) % 365
-        let date = NSDate()
-        let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components([.Day , .Month , .Year], fromDate: date)
+        let date = Date()
+        let calendar = Calendar.current
+        let components = (calendar as NSCalendar).components([.day , .month , .year], from: date)
         let index = components.day
         
         var todayInt = 0
         
         // Gets int of the day previously saved
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if defaults.stringForKey(defaultsKeys.key_quoteCounter) != nil {
-            todayInt = Int(defaults.stringForKey(defaultsKeys.key_quoteCounter)!)!
+        let defaults = UserDefaults.standard
+        if defaults.string(forKey: defaultsKeys.key_quoteCounter) != nil {
+            todayInt = Int(defaults.string(forKey: defaultsKeys.key_quoteCounter)!)!
         }
         
-        print("Todays Int: \(todayInt) vs. Previously saved: \(index)")
+        print("Todays Int: \(todayInt) vs. Previously saved: \(String(describing: index))")
         
         if index != todayInt {
             
             // Save todays int as the most recent & fetch new quote
-            defaults.setObject(index, forKey: defaultsKeys.key_quoteCounter)
+            defaults.set(index, forKey: defaultsKeys.key_quoteCounter)
             
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async {
                 
                 // Make async API call to fetch quote & image
                 self.getQuote("http://apimk.com/motivationalquotes?get_quote=yes")
                 
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     //loading sign
                     self.textView.text = "Loading..."
                 }
@@ -102,24 +102,24 @@ class QuoteViewController: UIViewController {
         } else {
             
             // Show same quote as it is not a new day
-            let dailyQuote = defaults.stringForKey(defaultsKeys.key_dailyQuote)
+            let dailyQuote = defaults.string(forKey: defaultsKeys.key_dailyQuote)
             self.textView.text = dailyQuote
         }
 
     }
     
-    func getQuote(reuqestUrl: String){
+    func getQuote(_ reuqestUrl: String){
         let url : String = reuqestUrl
         let request : NSMutableURLRequest = NSMutableURLRequest()
-        request.URL = NSURL(string: url)
-        request.HTTPMethod = "GET"
+        request.url = URL(string: url)
+        request.httpMethod = "GET"
         print("Start")
         
-        let session = NSURLSession.sharedSession()
+        let session = URLSession.shared
         var firstQuote = [String: AnyObject]()
-        session.dataTaskWithRequest(request) { (data, response, error) -> Void in
+        session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
             do {
-                let jsonResult: NSArray! = try NSJSONSerialization.JSONObjectWithData(data!, options:NSJSONReadingOptions.MutableContainers) as? NSArray
+                let jsonResult: NSArray! = try JSONSerialization.jsonObject(with: data!, options:JSONSerialization.ReadingOptions.mutableContainers) as? NSArray
                 print("In method")
                 if (jsonResult != nil) {
                     // process jsonResult
@@ -131,12 +131,12 @@ class QuoteViewController: UIViewController {
                     let quote = firstQuote["quote"] as? String
                     let author = firstQuote["author_name"] as? String
                     
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         
                         let dailyQuote = quote! + " - " + author!
                         
-                        let defaults = NSUserDefaults.standardUserDefaults()
-                        defaults.setObject(dailyQuote, forKey: defaultsKeys.key_dailyQuote)
+                        let defaults = UserDefaults.standard
+                        defaults.set(dailyQuote, forKey: defaultsKeys.key_dailyQuote)
                         
                         self.textView.text = dailyQuote
                     }
@@ -155,7 +155,7 @@ class QuoteViewController: UIViewController {
             catch {
                 print("Error Occured")
             }
-        }.resume()
+        }) .resume()
     }
     
     
