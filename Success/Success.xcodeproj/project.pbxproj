@@ -10,6 +10,7 @@
 		B824E4C81E9CB7CD001A01AD /* BannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B824E4C71E9CB7CD001A01AD /* BannerView.swift */; };
 		B85DD3F01EA3F9A10067EF77 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B85DD3EF1EA3F9A10067EF77 /* ScheduleViewController.swift */; };
 		B85DD3F41EA40DA80067EF77 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B85DD3F31EA40DA80067EF77 /* SettingsViewController.swift */; };
+		B8799CFC1EAD39EB00E3EAED /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8799CFB1EAD39EB00E3EAED /* FeedViewController.swift */; };
 		B89710551E9B50920081FE7D /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89710541E9B50920081FE7D /* UserData.swift */; };
 		B8F039011E9A17AC00E789B9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F039001E9A17AC00E789B9 /* AppDelegate.swift */; };
 		B8F039031E9A17AC00E789B9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F039021E9A17AC00E789B9 /* ViewController.swift */; };
@@ -23,6 +24,7 @@
 		B824E4C71E9CB7CD001A01AD /* BannerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BannerView.swift; sourceTree = "<group>"; };
 		B85DD3EF1EA3F9A10067EF77 /* ScheduleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScheduleViewController.swift; path = ../ScheduleViewController.swift; sourceTree = "<group>"; };
 		B85DD3F31EA40DA80067EF77 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		B8799CFB1EAD39EB00E3EAED /* FeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		B89710541E9B50920081FE7D /* UserData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		B8F038FD1E9A17AB00E789B9 /* Success.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Success.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8F039001E9A17AC00E789B9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -67,8 +69,9 @@
 				B8F039001E9A17AC00E789B9 /* AppDelegate.swift */,
 				B8F039021E9A17AC00E789B9 /* ViewController.swift */,
 				B8F039121E9B463A00E789B9 /* QuoteViewController.swift */,
-				B85DD3F31EA40DA80067EF77 /* SettingsViewController.swift */,
+				B8799CFB1EAD39EB00E3EAED /* FeedViewController.swift */,
 				B85DD3EF1EA3F9A10067EF77 /* ScheduleViewController.swift */,
+				B85DD3F31EA40DA80067EF77 /* SettingsViewController.swift */,
 				B89710541E9B50920081FE7D /* UserData.swift */,
 				B824E4C71E9CB7CD001A01AD /* BannerView.swift */,
 				B8F039041E9A17AC00E789B9 /* Main.storyboard */,
@@ -158,6 +161,7 @@
 				B8F039031E9A17AC00E789B9 /* ViewController.swift in Sources */,
 				B85DD3F01EA3F9A10067EF77 /* ScheduleViewController.swift in Sources */,
 				B89710551E9B50920081FE7D /* UserData.swift in Sources */,
+				B8799CFC1EAD39EB00E3EAED /* FeedViewController.swift in Sources */,
 				B8F039011E9A17AC00E789B9 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

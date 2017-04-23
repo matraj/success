@@ -33,6 +33,13 @@ class QuoteViewController: UIViewController {
         
         self.fetchQuote()
         
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture(gesture:)))
+        swipeRight.direction = UISwipeGestureRecognizerDirection.right
+        self.tabBarController?.view.addGestureRecognizer(swipeRight)
+        
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture(gesture:)))
+        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
+        self.tabBarController?.view.addGestureRecognizer(swipeLeft)
     }
 
     override func didReceiveMemoryWarning() {
@@ -43,13 +50,37 @@ class QuoteViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        self.setupUI()
+    }
+    
+    func respondToSwipeGesture(gesture: UIGestureRecognizer) {
+        
+        if let swipeGesture = gesture as? UISwipeGestureRecognizer {
+            
+            
+            switch swipeGesture.direction {
+            case UISwipeGestureRecognizerDirection.right:
+//                print("Swiped right")
+                self.tabBarController?.selectedIndex -= 1
+            case UISwipeGestureRecognizerDirection.left:
+//                print("Swiped left")
+                self.tabBarController?.selectedIndex += 1
+            default:
+                break
+            }
+        }
+    }
+    
+    func setupUI() {
         self.tabBarController?.navigationItem.title = "Daily Quote"
         
+        // Fill goal banner
         let defaults = UserDefaults.standard
         if let stringOne = defaults.string(forKey: defaultsKeys.key_userGoal) {
             userGoal_Lbl.text = stringOne
         }
         
+        // Add settings button
         let settingButton = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         settingButton.setBackgroundImage(UIImage(named: "setting_icon"), for: UIControlState())
         settingButton.addTarget(self, action: #selector(QuoteViewController.segueToSetting), for: .touchUpInside)
@@ -61,14 +92,13 @@ class QuoteViewController: UIViewController {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let nextViewController = storyBoard.instantiateViewController(withIdentifier: "settingVC") as! SettingsViewController
         
-        self.tabBarController?.navigationController?.pushViewController(nextViewController, animated: true)
+//        self.tabBarController?.navigationController?.pushViewController(nextViewController, animated: true)
+        self.tabBarController?.navigationController?.present(nextViewController, animated: true, completion: nil)
     }
     
     func fetchQuote() {
         
         // Gets int for today (integer will cycle every 365 days)
-//        let daysSince1970 = NSDate().timeIntervalSince1970 / 60 / 60 / 24
-//        let index = Int(daysSince1970) % 365
         let date = Date()
         let calendar = Calendar.current
         let components = (calendar as NSCalendar).components([.day , .month , .year], from: date)

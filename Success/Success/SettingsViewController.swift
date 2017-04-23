@@ -46,6 +46,10 @@ class SettingsViewController: UIViewController {
         defaults.set(goal, forKey: defaultsKeys.key_userGoal)
     }
     
+    @IBAction func dismissViewController(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     /*
     // MARK: - Navigation
 

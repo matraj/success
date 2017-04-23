@@ -27,8 +27,6 @@ class ScheduleViewController: UIViewController, UITextViewDelegate, UIScrollView
         self.hideKeyboardWhenTappedAround()
 
         // Do any additional setup after loading the view.
-        self.title = "My Schedule"
-        
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(ScheduleViewController.keyboardWillShow(notification:)),
